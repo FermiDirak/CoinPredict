@@ -1,2 +1,5 @@
+#ignoring .pyc to prevent bugs and clutter
+*.pyc
+
 #ignore config/keys. If you are forking this repo, please provide your own keys
 config/keys
