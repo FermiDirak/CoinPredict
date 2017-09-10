@@ -8,6 +8,8 @@ from data_management import config
 if __name__ == '__main__':
     config = config.Config()
 
-    settings = config.ask_db_settings()
+    print 'would you like to setup db config? \'yes\'/\'no\''
+    config_db = raw_input()
 
-    print settings
+    if config_db == 'yes':
+        config.setup_db_config()
