@@ -10,6 +10,12 @@ class DataExtraction(object):
     BTC_USD = 'BTC-USD'
     ETH_USD = 'ETH-USD'
 
+    settings = {
+        'start_time': 1498867200, #July 1st 00:00:00. When to first start sampling data
+        'granularity': 20, #the minimum amount of time between samples
+        'step': 3600 #number of seconds to increment api polling by
+    }
+
     def __init__(self):
         self.public_client = gdax.PublicClient()
 
@@ -29,15 +35,37 @@ class DataExtraction(object):
 
         return [d for d in products if d['id'] == product_id]
 
+    def get_historic(self, product_id, start_time, end_time, min_granularity):
+        """get a list of historic rates between start and end (epoch)
+            at speicified minimum level of granularity"""
+
+        start_date = self.epoch_to_date(start_time)
+        end_date = self.epoch_to_date(end_time)
+
+        return self.public_client.get_product_historic_rates(product_id, \
+            start=start_date, end=end_date, granularity=min_granularity)
+
     def download_all_trade_data(self, product_id):
         """download all trade transactions for a given product
             up to the latest trade"""
+
+        start_time = self.settings['start_time']
+        step = self.settings['step']
+        end_time = start_time + step
+
         pass
 
+
+
     def time_to_epoch(self, date):
-        """converts time in format of 'year-month-dateThour:min:secZ
+        """converts time in format of 'year-month-dateThour:min:secZ'
             into epoch time"""
 
         pattern = '%Y-%m-%dT%H:%M:%S.%fZ'
         epoch = datetime(1970, 1, 1)
         return (datetime.strptime(date, pattern) - epoch).total_seconds()
+
+    def epoch_to_date(self, epochtime):
+        """converts epoch time to format of 'year-month-dateThour:min:secZ'"""
+
+        return datetime.utcfromtimestamp(epochtime).isoformat()
