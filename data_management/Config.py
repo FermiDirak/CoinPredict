@@ -7,8 +7,16 @@ class Config(object):
 
     CONFIG_FILES = {
         'data_extract': 'dataextract_config',
+        'postgres': 'postgresql',
         'svm': 'svm_config',
         'genetic_alg': 'genetic_alg_config'
+    }
+
+    DB_PARAMS = {
+        'host': 'localhost',
+        'database': 'CoinPredict',
+        'user': 'postgres',
+        'password': 'postgres'
     }
 
 
@@ -38,3 +46,33 @@ class Config(object):
             settings[setting_key] = setting_val
 
         return settings
+
+    def ask_config_settings(self, filename, default_settings):
+        """asks the user for config settings, and returns custom settings"""
+
+        print 'now modifying %s', filename
+        for key, val in default_settings:
+            print 'param: %s [defaults to: %s', key, val
+            new_val = raw_input()
+
+            if new_val is not None:
+                default_settings[key] = new_val
+
+        print 'settings for %s have been modified', filename
+
+        return default_settings
+
+
+    def write_db_config(self, settings=None):
+        """writes the database configuration"""
+
+        if  isinstance(settings, dict):
+            for key in self.DB_PARAMS:
+                if settings[key] is not None:
+                    self.DB_PARAMS[key] = settings[key]
+
+        self.write_config(self.CONFIG_FILES['postgres'], self.DB_PARAMS)
+
+    def read_db_config(self):
+        """reads the database config file"""
+        return self.read_config(self.CONFIG_FILES['postgres'])

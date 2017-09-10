@@ -15,3 +15,7 @@ reports: output reports on performance and benchmarks
 tests: Unit tests for project
 README: Notes to orient project newcomers
 TODO: list of future improvements and bugfixes
+
+
+Before you can use this application, you must first set up a postgresql server
+`CREATE DATABASE CoinPredict`
