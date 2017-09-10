@@ -12,7 +12,7 @@ class Config(object):
         'genetic_alg': 'genetic_alg_config'
     }
 
-    DB_PARAMS = {
+    DB_DEFAULT = {
         'host': 'localhost',
         'database': 'CoinPredict',
         'user': 'postgres',
@@ -50,15 +50,18 @@ class Config(object):
     def ask_config_settings(self, filename, default_settings):
         """asks the user for config settings, and returns custom settings"""
 
-        print 'now modifying %s', filename
-        for key, val in default_settings:
-            print 'param: %s [defaults to: %s', key, val
+        print 'now modifying ' + filename + '.ini'
+
+        print type(default_settings)
+
+        for key in default_settings:
+            print 'param: \'%s\' [defaults to: %s]'%(key, default_settings[key])
             new_val = raw_input()
 
-            if new_val is not None:
+            if new_val is not '':
                 default_settings[key] = new_val
 
-        print 'settings for %s have been modified', filename
+        print 'settings for %s have been modified'%(filename) + ':'
 
         return default_settings
 
@@ -67,12 +70,17 @@ class Config(object):
         """writes the database configuration"""
 
         if  isinstance(settings, dict):
-            for key in self.DB_PARAMS:
+            for key in self.DB_DEFAULT:
                 if settings[key] is not None:
-                    self.DB_PARAMS[key] = settings[key]
+                    self.DB_DEFAULT[key] = settings[key]
 
-        self.write_config(self.CONFIG_FILES['postgres'], self.DB_PARAMS)
+        self.write_config(self.CONFIG_FILES['postgres'], self.DB_DEFAULT)
 
     def read_db_config(self):
         """reads the database config file"""
         return self.read_config(self.CONFIG_FILES['postgres'])
+
+    def ask_db_settings(self):
+        """asks the user for db config settings, and returns custom settings"""
+        settings = self.ask_config_settings(self.CONFIG_FILES['postgres'], self.DB_DEFAULT)
+        return settings
