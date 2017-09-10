@@ -3,7 +3,7 @@
 import time
 import gdax
 
-import config.setup_config as setup_config
+import data_management
 
 class CoinPredict(object):
     """ CoinPredict is used to do random things """
@@ -14,6 +14,4 @@ class CoinPredict(object):
         public_client = gdax.PublicClient()
 
 if __name__ == '__main__':
-    
-    # set up config
-    setup_config.write_config()
+    pass

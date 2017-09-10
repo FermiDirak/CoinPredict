@@ -1,4 +1,4 @@
-"""Walks user through setting up and saving a config"""
+"""Write and Retrieve Configs for data extraction, model creation, etc"""
 
 import ConfigParser
 
