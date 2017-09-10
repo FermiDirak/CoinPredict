@@ -49,13 +49,20 @@ class DataExtraction(object):
         """download all trade transactions for a given product
             up to the latest trade"""
 
+        trade_data = []
+
+        granularity = self.settings['granularity']
         start_time = self.settings['start_time']
         step = self.settings['step']
         end_time = start_time + step
+        stop_time = int(time.time())
 
-        pass
+        while end_time < stop_time:
+            trade_data.extend(self.get_historic(product_id, start_time, end_time, granularity))
+            start_time += step
+            end_time += step
 
-
+        return trade_data
 
     def time_to_epoch(self, date):
         """converts time in format of 'year-month-dateThour:min:secZ'
