@@ -3,3 +3,7 @@
 
 #ignore config/keys. If you are forking this repo, please provide your own keys
 config/keys
+
+#ignore cache data, but not cache scripts
+cache/*
+!cache/src

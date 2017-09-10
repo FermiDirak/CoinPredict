@@ -3,6 +3,7 @@
 import time
 from datetime import datetime
 import gdax
+import csv
 
 class DataExtraction(object):
     """Used for extracting data from gdax"""
@@ -13,7 +14,8 @@ class DataExtraction(object):
     settings = {
         'start_time': 1498867200, #July 1st 00:00:00. When to first start sampling data
         'granularity': 20, #the minimum amount of time between samples
-        'step': 3600 #number of seconds to increment api polling by
+        'step': 3600, #number of seconds to increment api polling by
+        'debug_mode': True #display debug information
     }
 
     def __init__(self):
