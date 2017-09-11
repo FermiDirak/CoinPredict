@@ -14,7 +14,7 @@ class Config(object):
 
     DB_DEFAULT = {
         'host': 'localhost',
-        'database': 'CoinPredict',
+        'database': 'coinpredict',
         'user': 'postgres',
         'password': 'postgres',
         'port': '5432'

@@ -15,3 +15,4 @@ if __name__ == '__main__':
         CONF.setup_db_config()
 
     DB.initialize_db()
+    DB.close_connection()
