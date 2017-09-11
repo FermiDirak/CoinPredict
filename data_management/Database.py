@@ -17,8 +17,6 @@ class Database(object):
         self.conf = config.Config()
         self.connect()
 
-        self.initialize_db()
-
     def connect(self):
         """creates a connection and a cursor to the PostgreSQL database server"""
 
