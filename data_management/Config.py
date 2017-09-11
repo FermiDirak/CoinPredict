@@ -16,7 +16,8 @@ class Config(object):
         'host': 'localhost',
         'database': 'CoinPredict',
         'user': 'postgres',
-        'password': 'postgres'
+        'password': 'postgres',
+        'port': '5432'
     }
 
 
@@ -73,6 +74,10 @@ class Config(object):
         settings = self.ask_db_settings()
         self.write_db_config(settings)
 
+    def ask_db_settings(self):
+        """asks the user for db config settings, and returns custom settings"""
+        return self.ask_config_settings(self.CONFIG_FILES['postgres'], self.DB_DEFAULT)
+
     def write_db_config(self, settings=None):
         """writes the database configuration"""
 
@@ -86,7 +91,3 @@ class Config(object):
     def read_db_config(self):
         """reads the database config file"""
         return self.read_config(self.CONFIG_FILES['postgres'])
-
-    def ask_db_settings(self):
-        """asks the user for db config settings, and returns custom settings"""
-        return self.ask_config_settings(self.CONFIG_FILES['postgres'], self.DB_DEFAULT)

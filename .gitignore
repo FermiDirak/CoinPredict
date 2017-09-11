@@ -1,8 +1,8 @@
 #ignoring .pyc to prevent bugs and clutter
 *.pyc
 
-#ignore config/keys. If you are forking this repo, please provide your own keys
-config/keys
+#ignore config files. If you are forking this repo, please provide your own keys
+config/
 
 #ignore cache data, but not cache scripts
 cache/*

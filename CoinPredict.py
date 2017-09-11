@@ -6,10 +6,10 @@ import gdax
 from data_management import config
 
 if __name__ == '__main__':
-    config = config.Config()
+    conf = config.Config()
 
     print 'would you like to setup db config? \'yes\'/\'no\''
     config_db = raw_input()
 
     if config_db == 'yes':
-        config.setup_db_config()
+        conf.setup_db_config()
