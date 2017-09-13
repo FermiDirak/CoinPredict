@@ -4,7 +4,11 @@ update your model, and begin predicting in real time"""
 from data_management import config
 from data_management import database
 
+from data_extraction import data_extraction
+
 if __name__ == '__main__':
+    DE = data_extraction.DataExtraction()
+
     CONF = config.Config()
 
     print 'would you like to setup db config? \'yes\'/\'no\''
@@ -17,6 +21,6 @@ if __name__ == '__main__':
 
     DB.initialize_db()
 
-    DB.add_historic_raw_data([1499216640, 234, 236.14, 236.14, 234, 16.94774304])
+    DE.download_all_trade_data(DB, DE.BTC_USD)
 
     DB.close_connection()

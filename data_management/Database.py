@@ -45,8 +45,6 @@ class Database(object):
             "WHERE table_name='" + self.TABLE_NAMES['historic_raw_data'] + "');")
         is_historic_table_initalized = self.cur.fetchone()[0]
 
-        print is_historic_table_initalized
-
         if not is_historic_table_initalized:
             self.cur.execute("CREATE TABLE " + self.TABLE_NAMES['historic_raw_data'] + \
                 " (" + self.HISTORIC_SCHEMA + ");")

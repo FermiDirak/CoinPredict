@@ -3,13 +3,14 @@
 import time
 from datetime import datetime
 import gdax
-import csv
 
 class DataExtraction(object):
     """Used for extracting data from gdax"""
 
     BTC_USD = 'BTC-USD'
     ETH_USD = 'ETH-USD'
+
+    debug = True #@TODO: turn this debug into a global debug
 
     settings = {
         'start_time': 1498867200, #July 1st 00:00:00. When to first start sampling data
@@ -47,11 +48,9 @@ class DataExtraction(object):
         return self.public_client.get_product_historic_rates(product_id, \
             start=start_date, end=end_date, granularity=min_granularity)
 
-    def download_all_trade_data(self, product_id):
+    def download_all_trade_data(self, database, product_id):
         """download all trade transactions for a given product
             up to the latest trade"""
-
-        trade_data = []
 
         granularity = self.settings['granularity']
         start_time = self.settings['start_time']
@@ -59,12 +58,18 @@ class DataExtraction(object):
         end_time = start_time + step
         stop_time = int(time.time())
 
+        trade_data = []
+
         while end_time < stop_time:
-            trade_data.extend(self.get_historic(product_id, start_time, end_time, granularity))
+            trade_data = self.get_historic(product_id, start_time, end_time, granularity)
             start_time += step
             end_time += step
 
-        return trade_data
+            for datum in trade_data:
+                if self.debug:
+                    print datum
+
+                database.add_historic_raw_data(datum)
 
     def time_to_epoch(self, date):
         """converts time in format of 'year-month-dateThour:min:secZ'
