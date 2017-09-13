@@ -15,6 +15,8 @@ if __name__ == '__main__':
 
     DB = database.Database()
 
-
     DB.initialize_db()
+
+    DB.add_historic_raw_data([1499216640, 234, 236.14, 236.14, 234, 16.94774304])
+
     DB.close_connection()

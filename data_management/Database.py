@@ -10,8 +10,12 @@ class Database(object):
         'historic_raw_data': 'historic_raw_data'
     }
 
+    # @TODO: Refactor this to be robust and non-redundant
     HISTORIC_SCHEMA = 'time bigint PRIMARY KEY, \
         low money, high money, open money, close money, volume double precision'
+    
+    # @TODO: Refactor this to be robust and non-redundant
+    HISTORIC_COLS = 'time, low, high, open, close, volume'
 
     def __init__(self):
         self.conf = config.Config()
@@ -52,7 +56,19 @@ class Database(object):
             # self.cur.execute("INSERT INTO " + self.TABLE_NAMES['historic_raw_data'] + \
             #     "(time, low, high, open, close, volume) VALUES (0, 0, 0, 0, 0, 0)")
 
+    def add_historic_raw_data(self, data):
+        """adds entry to historic raw data table"""
+
+        # Check if data is array of 6 elements
+        if hasattr(data, "__len__") and data.__len__() == 6:
+
+            self.cur.execute("INSERT INTO " + self.TABLE_NAMES['historic_raw_data'] + \
+                " (" + self.HISTORIC_COLS + ") VALUES (" + ', '.join(str(d) for d in data) + ");")
+
+            self.conn.commit()
+
 
     def close_connection(self):
         """closes db connection"""
+        self.cur.close()
         self.conn.close()
