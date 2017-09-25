@@ -1,3 +1,3 @@
 """
-Backs up the Coin Predict Database
+Backs up the Coin Predict Database.
 """
