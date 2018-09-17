@@ -1,0 +1,37 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "The server to CoinPredict",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "dev": "./node_modules/nodemon/bin/nodemon.js",
+    "build": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FermiDirak/CoinPredict.git"
+  },
+  "keywords": [
+    "coin",
+    "predict"
+  ],
+  "author": "fermiDirak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FermiDirak/CoinPredict/issues"
+  },
+  "homepage": "https://github.com/FermiDirak/CoinPredict#readme",
+  "dependencies": {
+    "@types/dotenv": "^4.0.3",
+    "@types/express": "^4.16.0",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3"
+  }
+}
