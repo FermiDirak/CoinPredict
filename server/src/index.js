@@ -1,64 +1,44 @@
 require('dotenv').config();
 const WebSocket = require('ws');
-const GDAX = require('gdax');
+const {createSocket, gdaxClient, gdaxSocket} = require('./gdax');
 const influx = require('./influx');
 const {CURRENCIES, MIN_TRADE_ID} = require('./constants');
 
-const gdaxClient = new GDAX.PublicClient();
-const gdaxSocket = new GDAX.WebsocketClient(CURRENCIES);
+let firstTradeIds = {/* BTC, ETH */};
+let lastTradeIds = {/* BTC, ETH */};
 
-
-gdaxSocket.on('message', (data) => {
-  if (data.type === 'match') {
-    console.log(data);
-  }
+// evaluate firstTradeIds
+CURRENCIES.forEach((currency, i) => {
+  firstTradeIds[currency] = influx.getFirstTradeId(currency) || MIN_TRADE_ID;
 });
 
 
+/** called when stream starts coming in */
+function onStart(data) {
+  const currency = data.product_id;
 
-return 0;
+  /// update last trade id
+  lastTradeIds[currency] = data.trade_id;
 
-// (async () => {
+  // for (let i = firstTradeIds[currency] + 100; i < lastTradeIds[currency] - 100; ++i) {
+  //   gdaxClient.getProductTrades(currency, { after: i, limit: 100 }, (err, response, data) => {
+  //     //do something with this data
+  //   });
+  // });
 
-//   // iterate on trades starting from LAST_ENTRY or 10000000
-//   // and populate tables with trade data for BTC-USD
+}
 
-//   CURRENCIES.forEach(async (currency) => {
+/** called every transactional tick */
+function onTick(data) {
+  const currency = data.product_id;
 
-//     // get the last entry from trades table
-//     const lastTradeId = await getLastTradeId() || MIN_TRADE_ID;
+  console.log(data);
 
-//     const
+  /// update last trade id
+  lastTradeIds[currency] = data.trade_id;
 
+  console.log(firstTradeIds['BTC-USD'], lastTradeIds['BTC-USD'])
 
-//   });
+}
 
-
-
-// })();
-
-// /** Gets the trade id of the last trade
-//  * @return the last trade number or undefined if no entries exist
-//  */
-// async function getLastTradeId() {
-//   let tradeIds = await influx.query(`select "trade_id" from "BTC-USD" limit 1`);
-
-//   return undefined;
-// }
-
-
-
-
-
-
-
-// gdaxSocket.on('message', (data) => {
-//   if (data.type === 'match') {
-//     console.log(data);
-//   }
-// });
-
-// gdaxClient.getProductTrades('BTC-USD', { after: 10000100, limit: 100 }, (err, response, data) => {
-//   console.log(data);
-// });
-
+createSocket(onStart, onTick);
