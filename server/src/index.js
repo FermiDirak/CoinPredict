@@ -1,44 +1,12 @@
-const dotenv = require('dotenv');
+require('dotenv').config();
 const WebSocket = require('ws');
-const Influx = require('influx');
 const GDAX = require('gdax');
-
-dotenv.config();
-
-const MIN_TRADE_ID = 10000000;
-const CURRENCIES = ['BTC-USD', 'ETH-USD']
+const influx = require('./influx');
+const {CURRENCIES, MIN_TRADE_ID} = require('./constants');
 
 const gdaxClient = new GDAX.PublicClient();
 const gdaxSocket = new GDAX.WebsocketClient(CURRENCIES);
 
-const influx = new Influx.InfluxDB({
-  host: 'localhost',
-  database: 'coin_predict',
-  schema: [
-    {
-      measurement: CURRENCIES[0],
-      fields: {
-        price: Influx.FieldType.FLOAT,
-        size: Influx.FieldType.FLOAT,
-        trade_id: Influx.FieldType.INTEGER,
-      },
-      tags: [
-        'side',
-      ]
-    },
-    {
-      measurement: CURRENCIES[1],
-      fields: {
-        price: Influx.FieldType.FLOAT,
-        size: Influx.FieldType.FLOAT,
-        trade_id: Influx.FieldType.INTEGER,
-      },
-      tags: [
-        'side',
-      ],
-    },
-  ],
-});
 
 gdaxSocket.on('message', (data) => {
   if (data.type === 'match') {
