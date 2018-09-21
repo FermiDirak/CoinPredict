@@ -12,24 +12,29 @@ CURRENCIES.forEach((currency, i) => {
   firstTradeIds[currency] = influx.getFirstTradeId(currency) || MIN_TRADE_ID;
 });
 
-
 /** called when stream starts coming in */
-function onStart(data) {
+async function onStart(data) {
   const currency = data.product_id;
 
-  /// update last trade id
+  // update last trade id
   lastTradeIds[currency] = data.trade_id;
 
-  // for (let i = firstTradeIds[currency] + 100; i < lastTradeIds[currency] - 100; ++i) {
-  //   gdaxClient.getProductTrades(currency, { after: i, limit: 100 }, (err, response, data) => {
-  //     //do something with this data
-  //   });
-  // });
+  scrapeTrades();
+
+  async function scrapeTrades() {
+    for (let i = firstTradeIds[currency] + 100; i < lastTradeIds[currency] - 100; i += 100) {
+    //   gdaxClient.getProductTrades(currency, { after: i, limit: 100 }, (err, response, data) => {
+    //     //do something with this data
+    //   });
+    }
+
+    console.log('done');
+  }
 
 }
 
 /** called every transactional tick */
-function onTick(data) {
+async function onTick(data) {
   const currency = data.product_id;
 
   console.log(data);
