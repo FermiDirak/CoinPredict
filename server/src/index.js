@@ -10,7 +10,11 @@ let lastTradeIds = {/* BTC, ETH */};
 
 // evaluate firstTradeIds
 CURRENCIES.forEach((currency, i) => {
-  firstTradeIds[currency] = influx.getFirstTradeId(currency) || MIN_TRADE_ID;
+  influx.getFirstTradeId(currency)
+    .then(firstTradeId => {
+      console.log(firstTradeId);
+      firstTradeIds[currency] = firstTradeId;
+    });
 });
 
 /** called on the very first tick */
@@ -30,7 +34,7 @@ async function onStart(data) {
       // getProductTrades is rate limited
       const data = await gdaxClient.getProductTrades(currency, {after: i, limit: 100});
 
-      await sleep(1000);
+      await sleep(500);
 
       influx.writePoints(
         data.map(datum => {

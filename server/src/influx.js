@@ -1,6 +1,6 @@
 /** Sets up Influx schemas */
 
-const {CURRENCIES} = require('./constants');
+const {CURRENCIES, MIN_TRADE_ID} = require('./constants');
 const Influx = require('influx');
 
 const DB_NAME = 'coin_predict';
@@ -48,18 +48,22 @@ influx.getDatabaseNames()
 /** gets the first trade id
  * @param {string} currency The currency to get the first Trade Id for in the db
  */
-influx.getFirstTradeId = currency => {
-  const query = `SELECT * FROM "${currency}" LIMIT 2`;
+influx.getFirstTradeId = (currency) => {
+  const query = `SELECT * FROM "${currency}" ORDER BY time DESC LIMIT 1`;
 
-  influx.queryRaw(query)
+  return influx.queryRaw(query)
     .then(rawData => {
-      // console.log(rawData);
+      let values = rawData.results[0].series[0].values;
+
+      if (values.length !== 0) {
+        return values[0][4];
+      }
+
+      return MIN_TRADE_ID;
     })
     .catch(error => {
       console.error(`query '${query}' failed: ${error}`);
     });
-
-  return null;
 }
 
 module.exports = influx;
