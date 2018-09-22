@@ -53,7 +53,7 @@ influx.getFirstTradeId = currency => {
 
   influx.queryRaw(query)
     .then(rawData => {
-      console.log(rawData);
+      // console.log(rawData);
     })
     .catch(error => {
       console.error(`query '${query}' failed: ${error}`);
