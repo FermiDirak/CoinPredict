@@ -34,7 +34,7 @@ async function onStart(data) {
       // getProductTrades is rate limited
       const data = await gdaxClient.getProductTrades(currency, {after: i, limit: 100});
 
-      await sleep(500);
+      await sleep(200);
 
       influx.writePoints(
         data.map(datum => {
@@ -48,12 +48,13 @@ async function onStart(data) {
             tags: {
               side: datum.side,
             },
-            timestamp: Date.parse(datum.time),
+            timestamp: '' + Date.parse(datum.time) + '000000',
           };
         })
       ).catch(err => {
-        console.error(`Error saving data to InfluxDB! ${err.stack}`)
-      })
+        console.error(`Error saving data to InfluxDB! ${err.stack}`);
+        process.exit();
+      });
     }
 
     console.log(`done with currency ${currency}`);

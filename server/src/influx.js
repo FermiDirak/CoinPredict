@@ -53,7 +53,13 @@ influx.getFirstTradeId = (currency) => {
 
   return influx.queryRaw(query)
     .then(rawData => {
-      let values = rawData.results[0].series[0].values;
+      const series = rawData.results[0].series;
+
+      if (!series) {
+        return MIN_TRADE_ID;
+      }
+
+      let values = series[0].values;
 
       if (values.length !== 0) {
         return values[0][4];
