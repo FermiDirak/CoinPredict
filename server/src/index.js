@@ -31,30 +31,34 @@ async function onStart(data) {
     for (let i = firstTradeIds[currency] + 100; i < lastTradeIds[currency] - 100; i += 100) {
       console.log(`currency ${currency} at trade id ${i}`);
 
-      // getProductTrades is rate limited
-      const data = await gdaxClient.getProductTrades(currency, {after: i, limit: 100});
+      try {
+        // getProductTrades is rate limited
+        const data = await gdaxClient.getProductTrades(currency, {after: i, limit: 100});
 
-      await sleep(200);
+        await sleep(200);
 
-      influx.writePoints(
-        data.map(datum => {
-          return {
-            measurement: currency,
-            fields: {
-              trade_id: datum.trade_id,
-              price: datum.price,
-              size: datum.size,
-            },
-            tags: {
-              side: datum.side,
-            },
-            timestamp: '' + Date.parse(datum.time) + '000000',
-          };
-        })
-      ).catch(err => {
-        console.error(`Error saving data to InfluxDB! ${err.stack}`);
-        process.exit();
-      });
+        influx.writePoints(
+          data.map(datum => {
+            return {
+              measurement: currency,
+              fields: {
+                trade_id: datum.trade_id,
+                price: datum.price,
+                size: datum.size,
+              },
+              tags: {
+                side: datum.side,
+              },
+              timestamp: '' + Date.parse(datum.time) + '000000',
+            };
+          })
+        );
+
+      } catch(error) {
+        console.error(error);
+        process.exit(1);
+      }
+
     }
 
     console.log(`done with currency ${currency}`);
