@@ -35,7 +35,7 @@ async function onStart(data) {
         // getProductTrades is rate limited
         const data = await gdaxClient.getProductTrades(currency, {after: i, limit: 100});
 
-        await sleep(200);
+        await sleep(250);
 
         influx.writePoints(
           data.map(datum => {

@@ -34,7 +34,9 @@ const influx = new Influx.InfluxDB({
   ],
 });
 
-// create db if it doesn't exist
+
+/* --------------------- create db if it doesn't exist --------------------- */
+
 influx.getDatabaseNames()
   .then(names => {
     if (!names.includes(DB_NAME)) {
@@ -44,6 +46,10 @@ influx.getDatabaseNames()
   .catch(error => {
     console.error(`Error creating Influx database ${DB_NAME}`);
   });
+
+
+/* --------------------------- helper functions ---------------------------- */
+
 
 /** gets the first trade id
  * @param {string} currency The currency to get the first Trade Id for in the db
